@@ -1,4 +1,10 @@
-let students = JSON.parse(localStorage.getItem("students")) || [];
+let students = [];
+
+try {
+students = JSON.parse(localStorage.getItem("students")) || [];
+} catch (error) {
+students = [];
+}
 
 function saveData() {
 localStorage.setItem("students", JSON.stringify(students));
@@ -16,40 +22,51 @@ if (name === "" || roll === "") {
     return;
 }
 
-if (students.some(student => student.roll === roll)) {
-    alert("This roll number already exists.");
+const duplicate = students.some(function(student) {
+    return student.roll === roll;
+});
+
+if (duplicate) {
+    alert("This roll number already exists!");
     return;
 }
 
 students.push({
     name: name,
     roll: roll,
-    attendance: [],
+    attendance: []
 });
 
 saveData();
+
 nameInput.value = "";
 rollInput.value = "";
+
 displayStudents();
+alert("Student added successfully!");
 
 }
 
 function markAttendance(roll, status) {
-const student = students.find(student => student.roll === roll);
+const student = students.find(function(item) {
+return item.roll === roll;
+});
 
 if (!student) return;
 
-const today = new Date().toISOString().split("T")[0];
-const existing = student.attendance.findIndex(
-    record => record.date === today
-);
+const today = new Date().toLocaleDateString("en-CA");
+const records = student.attendance;
 
-if (existing !== -1) {
-    student.attendance[existing].status = status;
+const existing = records.find(function(record) {
+    return record.date === today;
+});
+
+if (existing) {
+    existing.status = status;
 } else {
-    student.attendance.push({
+    records.push({
         date: today,
-        status: status,
+        status: status
     });
 }
 
@@ -59,11 +76,14 @@ displayStudents();
 }
 
 function deleteStudent(roll) {
-if (!confirm("Are you sure you want to delete this student?")) {
+if (!confirm("Do you want to delete this student?")) {
 return;
 }
 
-students = students.filter(student => student.roll !== roll);
+students = students.filter(function(student) {
+    return student.roll !== roll;
+});
+
 saveData();
 displayStudents();
 
@@ -72,87 +92,106 @@ displayStudents();
 function displayStudents() {
 const tableBody = document.getElementById("studentList");
 const searchInput = document.getElementById("searchInput");
+const summary = document.getElementById("summary");
 
 if (!tableBody) return;
 
-const search = searchInput ? searchInput.value.toLowerCase() : "";
+const search = searchInput.value.trim().toLowerCase();
+
 tableBody.innerHTML = "";
 
-students
-    .filter(student =>
-        student.name.toLowerCase().includes(search) ||
-        student.roll.toLowerCase().includes(search)
-    )
-    .forEach(student => {
-        const today = new Date().toISOString().split("T")[0];
-        const todayRecord = student.attendance.find(
-            record => record.date === today
-        );
+const filteredStudents = students.filter(function(student) {
+    return student.name.toLowerCase().includes(search) ||
+           student.roll.toLowerCase().includes(search);
+});
 
-        const presentCount = student.attendance.filter(
-            record => record.status === "Present"
-        ).length;
+filteredStudents.forEach(function(student) {
+    const today = new Date().toLocaleDateString("en-CA");
 
-        const totalDays = student.attendance.length;
-        const percentage = totalDays
-            ? ((presentCount / totalDays) * 100).toFixed(1)
-            : "0.0";
-
-        const row = document.createElement("tr");
-
-        row.innerHTML = `
-            <td>${student.roll}</td>
-            <td>${escapeHTML(student.name)}</td>
-            <td>${todayRecord ? todayRecord.status : "Not marked"}</td>
-            <td>${percentage}%</td>
-            <td>
-                <button onclick="markAttendance('${student.roll}', 'Present')">
-                    Present
-                </button>
-                <button onclick="markAttendance('${student.roll}', 'Absent')">
-                    Absent
-                </button>
-                <button class="delete-btn" onclick="deleteStudent('${student.roll}')">
-                    Delete
-                </button>
-            </td>
-        `;
-
-        tableBody.appendChild(row);
+    const todayRecord = student.attendance.find(function(record) {
+        return record.date === today;
     });
 
-const summary = document.getElementById("summary");
+    const presentCount = student.attendance.filter(function(record) {
+        return record.status === "Present";
+    }).length;
 
-if (summary) {
-    summary.textContent = "Total Students: " + students.length;
-}
+    const totalDays = student.attendance.length;
 
-}
+    const percentage = totalDays > 0
+        ? ((presentCount / totalDays) * 100).toFixed(1)
+        : "0.0";
 
-function escapeHTML(text) {
-return text.replace(/[&<>"']/g, function (character) {
-const characters = {
-"&": "&",
-"<": "<",
-">": ">",
-'"': """,
-"'": "'"
-};
+    const row = document.createElement("tr");
 
-    return characters[character];
+    const rollCell = document.createElement("td");
+    rollCell.textContent = student.roll;
+
+    const nameCell = document.createElement("td");
+    nameCell.textContent = student.name;
+
+    const attendanceCell = document.createElement("td");
+    attendanceCell.textContent = todayRecord
+        ? todayRecord.status
+        : "Not marked";
+
+    const percentageCell = document.createElement("td");
+    percentageCell.textContent = percentage + "%";
+
+    const actionsCell = document.createElement("td");
+
+    const presentButton = document.createElement("button");
+    presentButton.textContent = "Present";
+    presentButton.onclick = function() {
+        markAttendance(student.roll, "Present");
+    };
+
+    const absentButton = document.createElement("button");
+    absentButton.textContent = "Absent";
+    absentButton.onclick = function() {
+        markAttendance(student.roll, "Absent");
+    };
+
+    const deleteButton = document.createElement("button");
+    deleteButton.textContent = "Delete";
+    deleteButton.className = "delete-btn";
+    deleteButton.onclick = function() {
+        deleteStudent(student.roll);
+    };
+
+    actionsCell.appendChild(presentButton);
+    actionsCell.appendChild(document.createTextNode(" "));
+    actionsCell.appendChild(absentButton);
+    actionsCell.appendChild(document.createTextNode(" "));
+    actionsCell.appendChild(deleteButton);
+
+    row.appendChild(rollCell);
+    row.appendChild(nameCell);
+    row.appendChild(attendanceCell);
+    row.appendChild(percentageCell);
+    row.appendChild(actionsCell);
+
+    tableBody.appendChild(row);
 });
+
+summary.textContent = "Total Students: " + students.length;
 
 }
 
 function exportCSV() {
 let csv = "Roll Number,Student Name,Date,Status\n";
 
-students.forEach(student => {
+students.forEach(function(student) {
     if (student.attendance.length === 0) {
-        csv += `"${student.roll}","${student.name}","","Not marked"\n`;
+        csv += '"' + student.roll + '","' +
+            student.name.replace(/"/g, '""') +
+            '","","Not marked"\n';
     } else {
-        student.attendance.forEach(record => {
-            csv += `"${student.roll}","${student.name}","${record.date}","${record.status}"\n`;
+        student.attendance.forEach(function(record) {
+            csv += '"' + student.roll + '","' +
+                student.name.replace(/"/g, '""') +
+                '","' + record.date +
+                '","' + record.status + '"\n';
         });
     }
 });
@@ -161,12 +200,17 @@ const blob = new Blob([csv], {
     type: "text/csv;charset=utf-8;"
 });
 
+const url = URL.createObjectURL(blob);
 const link = document.createElement("a");
-link.href = URL.createObjectURL(blob);
-link.download = "attendance.csv";
-link.click();
 
-URL.revokeObjectURL(link.href);
+link.href = url;
+link.download = "attendance.csv";
+
+document.body.appendChild(link);
+link.click();
+link.remove();
+
+URL.revokeObjectURL(url);
 
 }
 
