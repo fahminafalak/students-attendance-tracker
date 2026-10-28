@@ -1,49 +1,87 @@
 <!DOCTYPE html><html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student Attendance Tracker</title>
-    <link rel="stylesheet" href="style.css">
-    <script src="script.js" defer></script>
-</head>
-<body><div class="container">
-    <h1>🎓 Student Attendance Tracker</h1>
-    <p style="text-align:center;">Manage your classroom attendance easily!</p>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Student Attendance Tracker</title>
 
+<!-- Connect CSS -->
+<link rel="stylesheet" href="style.css">
+
+<!-- Connect JavaScript -->
+<script src="script.js" defer></script>
+
+</head><body><div class="container">
+
+    <h1>🎓 Student Attendance Tracker</h1>
+    <p style="text-align: center;">
+        Manage your classroom attendance easily!
+    </p>
+
+    <!-- Add Student Form -->
     <div class="form">
-        <input type="text" id="studentName" placeholder="Enter student name">
-        <input type="text" id="rollNumber" placeholder="Enter roll number">
-        <button onclick="addStudent()">➕ Add Student</button>
+
+        <input
+            type="text"
+            id="studentName"
+            placeholder="Enter student name"
+        >
+
+        <input
+            type="text"
+            id="rollNumber"
+            placeholder="Enter roll number"
+        >
+
+        <button type="button" onclick="addStudent()">
+            ➕ Add Student
+        </button>
+
     </div>
 
+    <!-- Search Student -->
     <input
         type="text"
         id="searchInput"
         class="search-box"
-        placeholder="🔍 Search by name or roll number..."
+        placeholder="🔍 Search by name or roll number"
         oninput="displayStudents()"
     >
 
-    <div id="summary">Total Students: 0</div>
+    <!-- Student Summary -->
+    <div id="summary">
+        Total Students: 0
+    </div>
 
-    <div style="overflow-x:auto;">
+    <!-- Attendance Table -->
+    <div style="overflow-x: auto;">
+
         <table>
+
             <thead>
                 <tr>
                     <th>Roll Number</th>
                     <th>Student Name</th>
                     <th>Today's Attendance</th>
-                    <th>Attendance %</th>
+                    <th>Attendance Percentage</th>
                     <th>Actions</th>
                 </tr>
             </thead>
-            <tbody id="studentList"></tbody>
+
+            <tbody id="studentList">
+            </tbody>
+
         </table>
+
     </div>
 
-    <button class="export-btn" onclick="exportCSV()">
+    <!-- Export Attendance -->
+    <button
+        type="button"
+        class="export-btn"
+        onclick="exportCSV()"
+    >
         📥 Download Attendance CSV
     </button>
+
 </div>
 
 </body>
