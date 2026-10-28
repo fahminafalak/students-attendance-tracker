@@ -1,115 +1,255 @@
 * {
   box-sizing: border-box;
+  margin: 0;
+  padding: 0;
   }
 
+:root {
+--navy: #172554;
+--blue: #315efb;
+--light-blue: #eef2ff;
+--background: #f5f7fc;
+--text: #1e293b;
+--muted: #64748b;
+--border: #e2e8f0;
+--white: #ffffff;
+}
+
 body {
-font-family: Arial, sans-serif;
-background: #f4f6f9;
-margin: 0;
-padding: 20px;
-color: #333;
+font-family: "Segoe UI", Arial, sans-serif;
+background: var(--background);
+color: var(--text);
+padding: 35px 20px;
+line-height: 1.6;
 }
 
 .container {
-max-width: 900px;
-margin: auto;
-background: white;
-padding: 25px;
-border-radius: 10px;
-box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+max-width: 1150px;
+margin: 0 auto;
+background: var(--white);
+padding: 35px;
+border: 1px solid var(--border);
+border-radius: 18px;
+box-shadow: 0 12px 40px rgba(30, 41, 59, 0.07);
 }
 
 h1 {
-text-align: center;
-color: #2c3e50;
+color: var(--navy);
+font-size: 30px;
+font-weight: 750;
+letter-spacing: -0.7px;
+margin-bottom: 5px;
+}
+
+.container > p {
+color: var(--muted);
+font-size: 15px;
+margin-bottom: 30px;
+text-align: left !important;
 }
 
 .form {
 display: flex;
-gap: 10px;
-margin-bottom: 20px;
+gap: 14px;
 flex-wrap: wrap;
-}
-
-input, button {
-padding: 10px;
-font-size: 15px;
-border-radius: 5px;
+align-items: center;
+margin-bottom: 25px;
+padding: 22px;
+background: #f8faff;
+border: 1px solid var(--border);
+border-radius: 14px;
 }
 
 input {
-border: 1px solid #ccc;
+width: 100%;
+min-width: 0;
+padding: 13px 15px;
+font-family: inherit;
+font-size: 14px;
+color: var(--text);
+background: var(--white);
+border: 1px solid #d5deeb;
+border-radius: 9px;
+outline: none;
+transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form input {
 flex: 1;
-min-width: 150px;
+min-width: 180px;
+}
+
+input:focus {
+border-color: var(--blue);
+box-shadow: 0 0 0 3px rgba(49, 94, 251, 0.12);
+}
+
+input::placeholder {
+color: #94a3b8;
 }
 
 button {
+padding: 12px 18px;
+font-family: inherit;
+font-size: 13px;
+font-weight: 650;
+color: var(--white);
+background: var(--blue);
 border: none;
-background: #3498db;
-color: white;
+border-radius: 9px;
 cursor: pointer;
+white-space: nowrap;
+transition: background 0.2s, transform 0.2s;
 }
 
 button:hover {
-opacity: 0.85;
+background: #2448d8;
+transform: translateY(-1px);
+}
+
+.form button {
+padding: 13px 22px;
 }
 
 .search-box {
-width: 100%;
-margin-bottom: 15px;
+margin-bottom: 20px;
+background: #fbfcff;
+}
+
+#summary {
+margin: 20px 0;
+padding: 20px 22px;
+color: var(--navy);
+background: var(--light-blue);
+border: 1px solid #dbe4ff;
+border-radius: 12px;
+font-size: 17px;
+font-weight: 700;
 }
 
 table {
 width: 100%;
-border-collapse: collapse;
-margin-top: 10px;
-}
-
-th, td {
-border: 1px solid #ddd;
-padding: 10px;
-text-align: center;
+border-collapse: separate;
+border-spacing: 0;
+margin-top: 15px;
+font-size: 14px;
 }
 
 th {
-background: #3498db;
-color: white;
+padding: 16px 13px;
+text-align: left;
+background: var(--navy);
+color: var(--white);
+font-size: 12px;
+font-weight: 700;
+letter-spacing: 0.3px;
+text-transform: uppercase;
 }
 
-.present {
-background: #d4edda;
+th:first-child {
+border-radius: 9px 0 0 0;
 }
 
-.absent {
-background: #f8d7da;
+th:last-child {
+border-radius: 0 9px 0 0;
+}
+
+td {
+padding: 15px 13px;
+text-align: left;
+border-bottom: 1px solid var(--border);
+background: var(--white);
+overflow-wrap: anywhere;
+}
+
+tbody tr:hover td {
+background: #f8faff;
+}
+
+td button {
+margin: 3px;
+padding: 8px 11px;
+font-size: 12px;
+}
+
+td button:first-child {
+background: #15803d;
+}
+
+td button:first-child:hover {
+background: #166534;
+}
+
+td button:nth-of-type(2) {
+background: #d97706;
+}
+
+td button:nth-of-type(2):hover {
+background: #b45309;
 }
 
 .delete-btn {
-background: #e74c3c;
+background: #dc2626 !important;
+}
+
+.delete-btn:hover {
+background: #b91c1c !important;
+}
+
+.present {
+background: #dcfce7;
+}
+
+.absent {
+background: #fee2e2;
 }
 
 .export-btn {
-background: #27ae60;
-margin-top: 15px;
+display: none !important;
 }
 
-#summary {
-margin-top: 20px;
-font-weight: bold;
-}
-
-@media (max-width: 600px) {
+@media (max-width: 700px) {
 body {
-padding: 10px;
+padding: 14px 10px;
 }
 
 .container {
-    padding: 12px;
+    padding: 20px 14px;
+    border-radius: 13px;
 }
 
-th, td {
-    padding: 6px;
+h1 {
+    font-size: 24px;
+}
+
+.form {
+    padding: 15px;
+    gap: 12px;
+}
+
+.form input,
+.form button {
+    width: 100%;
+    min-width: 0;
+}
+
+#summary {
+    padding: 15px;
+    font-size: 15px;
+}
+
+table {
+    min-width: 720px;
     font-size: 12px;
+}
+
+th,
+td {
+    padding: 11px 9px;
+}
+
+td button {
+    margin: 2px;
 }
 
   }
